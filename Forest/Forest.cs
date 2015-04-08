@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Messaging;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Forest
 {
@@ -10,10 +12,14 @@ namespace Forest
 
 		void Move(string creatureName, Point vector);
 
-		void GenerateFromMatrice();
+		event Action<IForest> OnChange;
+
+		IEnumerable<string> GetPoints();
+
+		Point GetForestSize();
 	}
 
-	internal class FunkyForest : IForest
+	class FunkyForest : IForest
 	{
 		public FunkyForest(IMap map)
 		{
@@ -27,11 +33,10 @@ namespace Forest
 			}
 		}
 
-		
-
-	public void Put(string name, Point coordinates)
+		public void Put(string name, Point coordinates)
 		{
 			var newAdventurer = new Creature(name);
+			forest[coordinates.Y, coordinates.X].ReactWith(newAdventurer);
 
 		}
 
@@ -40,10 +45,23 @@ namespace Forest
 			throw new NotImplementedException();
 		}
 
-		public void GenerateFromMatrice()
+		public IEnumerable<string> GetPoints()
 		{
-			throw new NotImplementedException();
+			for (int i = 0; i < forest.GetLength(0); i++)
+			{
+				for (int j = 0; j < forest.GetLength(1); j++)
+				{
+					yield return forest[i, j].GetSquareCode();
+				}
+			}
 		}
+
+		public Point GetForestSize()
+		{
+			return new Point(forest.GetLength(0), forest.GetLength(1));
+		}
+
+		public event Action<IForest> OnChange;
 
 		private ForestSquare SomeMagic(char c)
 		{
@@ -64,55 +82,6 @@ namespace Forest
 		private ForestSquare[,] forest;
 	}
 
-	class MatriceForest : IForest
-	{
-
-		public void Put(string newCreatureName, Point coordinates)
-		{
-			var newAdventurer = new Creature(newCreatureName);
-			newAdventurer.MoveTo(forest[coordinates.X, coordinates.Y]);
-			forest[coordinates.X, coordinates.Y] = newAdventurer;//TODO: name collision detection
-
-		}
-
-		public void Move(string creatureName, Point vector)
-		{
-			CheckName(creatureName);
-			var chosenOne = creatures[creatureName];
-
-			vector.IsValidMoveVector();
-
-			var position = creaturePosition[chosenOne];
-			var nextPoint = position.Add(vector);
-			CheckPoint(nextPoint);
-
-			chosenOne.MoveTo(forest[nextPoint.X, nextPoint.Y]);
-			forest[nextPoint.X, nextPoint.Y] = chosenOne;
-			forest[position.X, position.Y] = new RoadCell();
-		}
-
-		public void GenerateFromMatrice()
-		{
-			throw new NotImplementedException();
-		}
-
-		private void CheckName(string name)
-		{
-			if (!creatures.ContainsKey(name))
-				throw new ForestExceptions.NoCreatureWithThisName();
-		}
-
-		private void CheckPoint(Point x)
-		{
-			if ((x.X < 0 || x.X >= forest.GetLength(0)) || (x.Y < 0 || x.Y >= forest.GetLength(1)))
-				throw new ForestExceptions.OutOfMapBounds();
-		}
-
-		private Dictionary<string, Creature> creatures;
-		private Dictionary<Creature, Point> creaturePosition;
-
-		private ForestSquare[,] forest;
-	}
 	public class Point
 	{
 		public int X { get; private set; }
