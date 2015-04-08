@@ -6,3 +6,4 @@ F:\Workspace\Forest\Forest\bin\Debug\nunit.framework.xml
 F:\Workspace\Forest\Forest\obj\Debug\Forest.csprojResolveAssemblyReference.cache
 F:\Workspace\Forest\Forest\obj\Debug\Forest.exe
 F:\Workspace\Forest\Forest\obj\Debug\Forest.pdb
+F:\Workspace\Forest\Forest\bin\Debug\Maps\map1.txt
