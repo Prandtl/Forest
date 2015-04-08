@@ -24,6 +24,7 @@ namespace Forest
 		public FunkyForest(IMap map)
 		{
 			var mat = map.GetMapMatrice();
+			forest = new ForestSquare[mat.GetLength(0),mat.GetLength(1)];
 			for (int i = 0; i < mat.GetLength(0); i++)
 			{
 				for (int j = 0; j < mat.GetLength(1); j++)
@@ -31,13 +32,14 @@ namespace Forest
 					forest[i, j] = SomeMagic(mat[i, j]);
 				}
 			}
+
 		}
 
 		public void Put(string name, Point coordinates)
 		{
 			var newAdventurer = new Creature(name);
 			forest[coordinates.Y, coordinates.X].ReactWith(newAdventurer);
-
+			OnChange(this);
 		}
 
 		public void Move(string creatureName, Point vector)
@@ -76,8 +78,8 @@ namespace Forest
 			{'L',()=>new LifeCell()}
 		};
 
-		private Dictionary<string, Creature> creatures;
-		private Dictionary<Creature, Point> creaturePosition;
+		private Dictionary<string, Creature> creatures = new Dictionary<string, Creature>();
+		private Dictionary<Creature, Point> creaturePosition = new Dictionary<Creature, Point>();
 
 		private ForestSquare[,] forest;
 	}

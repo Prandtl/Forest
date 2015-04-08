@@ -2,7 +2,7 @@
 {
 	interface ForestSquare
 	{
-		void ReactWith(Creature adventurer);
+		bool ReactWith(Creature adventurer);
 		string GetSquareCode();
 	}
 
@@ -18,9 +18,9 @@
 			cell.ReactWith(this);
 		}
 
-		public void ReactWith(Creature adventurer)
+		public bool ReactWith(Creature adventurer)
 		{
-			throw new ForestExceptions.NotFreeCellException();
+			return false;
 		}
 
 		public string GetSquareCode()
@@ -45,9 +45,9 @@
 
 	class ForestCell : ForestSquare
 	{
-		public void ReactWith(Creature adventurer)
+		public bool ReactWith(Creature adventurer)
 		{
-			throw new ForestExceptions.ForestCellException();
+			return false;
 		}
 
 		public string GetSquareCode()
@@ -58,8 +58,9 @@
 
 	class RoadCell : ForestSquare
 	{
-		public void ReactWith(Creature adventurer)
+		public bool ReactWith(Creature adventurer)
 		{
+			return true;
 		}
 
 		public string GetSquareCode()
@@ -70,9 +71,10 @@
 
 	class LifeCell : ForestSquare
 	{
-		public void ReactWith(Creature adventurer)
+		public bool ReactWith(Creature adventurer)
 		{
 			adventurer.AddLife();
+			return true;
 		}
 
 		public string GetSquareCode()
@@ -83,9 +85,10 @@
 
 	class TrapCell : ForestSquare
 	{
-		public void ReactWith(Creature adventurer)
+		public bool ReactWith(Creature adventurer)
 		{
 			adventurer.RemoveLife();
+			return true;
 		}
 
 		public string GetSquareCode()

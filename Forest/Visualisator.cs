@@ -29,13 +29,14 @@ namespace Forest
 				if (j == width)
 				{
 					j = 0;
-					Console.Write('\n');
+					Console.WriteLine();
 				}
 				var e = enumerator.Current;
 				char c;
 				if (!artistsView.TryGetValue(e, out c))
 					c = e[0];
 				Console.Write(c);
+				j++;
 			}
 		}
 
