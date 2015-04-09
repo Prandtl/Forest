@@ -15,14 +15,11 @@ namespace Forest
 	{
 		public void OnNewState(IForest forest)
 		{
+			Console.Clear();
 			var size = forest.GetForestSize();
-
-			var width = size.X;
-
+			var width = size.Y;
 			var rows = forest.GetPoints();
 			var enumerator = rows.GetEnumerator();
-
-
 			var j = 0;
 			while (enumerator.MoveNext())
 			{
@@ -37,6 +34,20 @@ namespace Forest
 					c = e[0];
 				Console.Write(c);
 				j++;
+			}
+			Console.Write("\n\n");
+			WriteNames(forest);
+		}
+
+
+		private void WriteNames(IForest forest)
+		{
+			foreach (var creature in forest.GetCreatures())
+			{
+				Console.WriteLine("{0} - {1} with {2} lifes",
+					creature.GetSquareCode()[0],
+					creature.GetSquareCode(),
+					creature.GetAmountOfLifes());
 			}
 		}
 

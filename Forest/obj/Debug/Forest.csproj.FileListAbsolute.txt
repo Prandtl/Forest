@@ -7,3 +7,4 @@ F:\Workspace\Forest\Forest\obj\Debug\Forest.csprojResolveAssemblyReference.cache
 F:\Workspace\Forest\Forest\obj\Debug\Forest.exe
 F:\Workspace\Forest\Forest\obj\Debug\Forest.pdb
 F:\Workspace\Forest\Forest\bin\Debug\Maps\map1.txt
+F:\Workspace\Forest\Forest\bin\Debug\Maps\map2.txt

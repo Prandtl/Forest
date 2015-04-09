@@ -12,27 +12,11 @@ namespace Forest
 			}
 		}
 
-		public class NotFreeCellException : ForestException
-		{
-			public override string Message
-			{
-				get { return "The cell, you want to move in is occupied"; }
-			}
-		}
-
 		public class OutOfMapBounds : ForestException
 		{
 			public override string Message
 			{
 				get { return "You can't move here: it's not on the map"; }
-			}
-		}
-
-		public class ForestCellException:ForestException
-		{
-			public override string Message
-			{
-				get { return "You can't move to the forrest. Sorry. :'("; }
 			}
 		}
 

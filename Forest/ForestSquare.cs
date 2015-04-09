@@ -38,6 +38,11 @@
 			lifes--;
 		}
 
+		public int GetAmountOfLifes()
+		{
+			return lifes;
+		}
+
 		private string name;
 
 		private int lifes;

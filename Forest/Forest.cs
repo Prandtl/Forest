@@ -14,8 +14,8 @@ namespace Forest
 
 		event Action<IForest> OnChange;
 
+		IEnumerable<Creature> GetCreatures();
 		IEnumerable<string> GetPoints();
-
 		Point GetForestSize();
 	}
 
@@ -24,7 +24,7 @@ namespace Forest
 		public FunkyForest(IMap map)
 		{
 			var mat = map.GetMapMatrice();
-			forest = new ForestSquare[mat.GetLength(0),mat.GetLength(1)];
+			forest = new ForestSquare[mat.GetLength(0), mat.GetLength(1)];
 			for (int i = 0; i < mat.GetLength(0); i++)
 			{
 				for (int j = 0; j < mat.GetLength(1); j++)
@@ -38,13 +38,38 @@ namespace Forest
 		public void Put(string name, Point coordinates)
 		{
 			var newAdventurer = new Creature(name);
-			forest[coordinates.Y, coordinates.X].ReactWith(newAdventurer);
+			var res = forest[coordinates.X, coordinates.Y].ReactWith(newAdventurer);
+			if (res)
+			{
+				forest[coordinates.X, coordinates.Y] = newAdventurer;
+				creatures.Add(name, newAdventurer);
+				creaturePosition.Add(newAdventurer, coordinates);
+			}
 			OnChange(this);
 		}
 
 		public void Move(string creatureName, Point vector)
 		{
-			throw new NotImplementedException();
+			Creature chosenOne;
+			creatures.TryGetValue(creatureName, out chosenOne);
+			var position = creaturePosition[chosenOne];
+			var newPosition = position.Add(vector);
+			var res = forest[newPosition.X, newPosition.Y].ReactWith(chosenOne);
+			if (res)
+			{
+				forest[newPosition.X, newPosition.Y] = chosenOne;
+				creaturePosition[chosenOne] = newPosition;
+				forest[position.X, position.Y] = new RoadCell();
+			}
+			OnChange(this);
+		}
+
+		public IEnumerable<Creature> GetCreatures()
+		{
+			foreach (var creature in creatures.Values)
+			{
+				yield return creature;
+			}
 		}
 
 		public IEnumerable<string> GetPoints()
