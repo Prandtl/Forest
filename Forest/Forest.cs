@@ -41,9 +41,16 @@ namespace Forest
 			var res = forest[coordinates.X, coordinates.Y].ReactWith(newAdventurer);
 			if (res)
 			{
-				forest[coordinates.X, coordinates.Y] = newAdventurer;
-				creatures.Add(name, newAdventurer);
-				creaturePosition.Add(newAdventurer, coordinates);
+				if (newAdventurer.GetAmountOfLifes() > 0)
+				{
+					forest[coordinates.X, coordinates.Y] = newAdventurer;
+					creatures.Add(name, newAdventurer);
+					creaturePosition.Add(newAdventurer, coordinates);
+				}
+				else
+				{
+					forest[coordinates.X, coordinates.Y] = new RoadCell();
+				}
 			}
 			OnChange(this);
 		}
@@ -51,17 +58,27 @@ namespace Forest
 		public void Move(string creatureName, Point vector)
 		{
 			Creature chosenOne;
-			creatures.TryGetValue(creatureName, out chosenOne);
-			var position = creaturePosition[chosenOne];
-			var newPosition = position.Add(vector);
-			var res = forest[newPosition.X, newPosition.Y].ReactWith(chosenOne);
-			if (res)
+			var exists = creatures.TryGetValue(creatureName, out chosenOne);
+			if (exists)
 			{
-				forest[newPosition.X, newPosition.Y] = chosenOne;
-				creaturePosition[chosenOne] = newPosition;
-				forest[position.X, position.Y] = new RoadCell();
+				var position = creaturePosition[chosenOne];
+				var newPosition = position.Add(vector);
+				var res = forest[newPosition.X, newPosition.Y].ReactWith(chosenOne);
+				if (res)
+				{
+					if (chosenOne.GetAmountOfLifes() > 0)
+					{
+						forest[newPosition.X, newPosition.Y] = chosenOne;
+						creaturePosition[chosenOne] = newPosition;
+					}
+					else
+					{
+						forest[newPosition.X, newPosition.Y] = new RoadCell();
+					}
+					forest[position.X, position.Y] = new RoadCell();
+				}
+				OnChange(this);
 			}
-			OnChange(this);
 		}
 
 		public IEnumerable<Creature> GetCreatures()
