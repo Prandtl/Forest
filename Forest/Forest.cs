@@ -74,6 +74,8 @@ namespace Forest
 					else
 					{
 						forest[newPosition.X, newPosition.Y] = new RoadCell();
+						creaturePosition.Remove(chosenOne);
+						creatures.Remove(creatureName);
 					}
 					forest[position.X, position.Y] = new RoadCell();
 				}
